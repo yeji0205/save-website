@@ -1,0 +1,514 @@
+/* ── Tokens ─────────────────────────────────────────────── */
+:root {
+  --bg: #adb0a1;
+  --text: #ffffff;
+  --text-soft: rgba(255, 255, 255, 0.9);
+  --glow: rgba(120, 196, 88, 0.55);
+  --glow-fade: rgba(120, 196, 88, 0);   /* same green, fully transparent */
+
+  --font: "KoHo", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+
+  /* ── FONT SIZES ── all of them, nothing set anywhere else.
+     Each is clamp(SMALLEST, SCALES-WITH-WINDOW, LARGEST):
+       - first value  = size on a narrow phone, never goes below this
+       - middle value = grows with window width (1vw = 1% of window width)
+       - last value   = size on a wide desktop, never goes above this
+     To make something a fixed size, replace the whole clamp() with one
+     value, e.g. --fs-tagline: 1rem;   (1rem = 16px) */
+  --fs-tagline: clamp(0.9rem, 1.5vw, 1.05rem);   /* hero paragraph     */
+  --fs-about:   clamp(0.85rem, 1.4vw, 1rem);     /* about paragraph    */
+  --fs-follow:  clamp(0.85rem, 1.4vw, 1rem);     /* "support and…"     */
+  --fs-lang:    clamp(0.8rem, 1.2vw, 0.9rem);    /* DE / EN            */
+  --fs-imprint: clamp(0.75rem, 1.1vw, 0.85rem);  /* footer             */
+
+  --logo-width: min(280px, 55vw);       /* hero wordmark */
+  --glow-width: min(620px, 92vw);       /* green halo, centred on the logo */
+  --about-glow-width: min(680px, 94vw); /* green halo behind the selfie     */
+  --hero-gap: clamp(40px, 7vh, 84px);   /* space between logo and tagline */
+
+  /* Video width is a proportion of the window: 60vw = 60% of screen width,
+     matching the mockup. The clamp stops it getting silly on a tiny phone
+     or a very wide monitor. The props are positioned in % of THIS, so they
+     scale with it automatically. Overridden to 88vw on small screens. */
+  --video-width: clamp(300px, 60vw, 900px);
+
+  --avatar-size: 156px;                 /* the selfie */
+  --video-to-about-gap: clamp(110px, 24vh, 300px);  /* video → selfie */
+
+  --social-size: 64px;                  /* icons in the about section */
+  --social-size-sm: 54px;               /* icons in the header        */
+
+  --radius: 10px;
+
+  /* Grain strength, 0 = off. Everything else about the grain — speck size,
+     density, contrast — lives in grain.js. See "THE GRAIN" block below.
+     --grain-url and --grain-tile are set by grain.js at runtime. */
+  --grain-opacity: 0.35;
+}
+
+/* ── Reset ──────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+body, h1, h2, p, figure { margin: 0; }
+img { display: block; max-width: 100%; height: auto; }
+button { font: inherit; color: inherit; background: none; border: 0; }
+
+/* ── Base ───────────────────────────────────────────────── */
+/* <html> is painted so the canvas and overscroll area are sage. */
+html { background-color: var(--bg); }
+
+body {
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0) 45%,
+    rgba(0, 0, 0, 0.045) 100%
+  );
+  background-attachment: fixed;
+  color: var(--text);
+  font-family: var(--font);
+  font-weight: 300;
+  font-style: italic;          /* the whole design is italic */
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-align: center;
+  overflow-x: hidden;
+}
+
+/* ═══ THE GRAIN ═══
+   The texture itself is drawn by grain.js, which hands it to CSS as the
+   --grain-url variable. Speck size / density / contrast all live there.
+   This block only decides WHERE it goes and HOW STRONG it is.
+
+   No mix-blend-mode: the specks are black and white with real transparency,
+   so they composite normally. Nothing here can silently cancel out.
+
+   LAYER ORDER, bottom to top:
+     0  body's background colour + gradient
+     1  this grain layer
+     2  all page content (see the rule below)
+
+   Note the grain uses z-index 1, NOT a negative value. Negative-z
+   descendants paint before in-flow block backgrounds, so body's own
+   background would cover it completely — a real trap here. Content is
+   lifted above it instead. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: var(--grain-opacity);
+  background-image: var(--grain-url);
+  background-size: var(--grain-tile) var(--grain-tile);
+  background-repeat: repeat;
+}
+
+/* Layer 2 — everything sits in front of the grain. Any new top-level
+   section must be added here too, or the grain will sit over it. */
+.header,
+.hero,
+.video,
+.about,
+.footer {
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: clamp(14px, 2.5vw, 26px);
+  padding: clamp(14px, 2.5vw, 24px) clamp(16px, 3vw, 32px);
+}
+
+.lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--fs-lang);
+  letter-spacing: 0.04em;
+}
+
+.lang__btn {
+  cursor: pointer;
+  padding: 2px;
+  opacity: 0.55;
+  transition: opacity 180ms ease;
+}
+
+.lang__btn:hover { opacity: 0.85; }
+
+.lang__btn.is-active {
+  opacity: 1;
+  font-weight: 600;
+}
+
+.lang__sep { opacity: 0.55; }
+
+/* ── Social discs ───────────────────────────────────────── */
+.socials {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* Bare icon buttons — no disc, no border, no label. The white glyph sits
+   directly on the sage; only the hover glow appears behind it. */
+.social {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: var(--social-size);
+  height: var(--social-size);
+  color: var(--text);
+  text-decoration: none;
+  transition: transform 200ms ease;
+}
+
+.socials--sm .social {
+  width: var(--social-size-sm);
+  height: var(--social-size-sm);
+}
+
+/* Green glow behind the disc on hover, 20% larger than the button. */
+.social::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120%;
+  height: 120%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    var(--glow) 0%,
+    rgba(120, 196, 88, 0.3) 48%,
+    var(--glow-fade) 100%
+  );
+  opacity: 0;
+  transition: opacity 200ms ease;
+  pointer-events: none;
+}
+
+.social:hover::before,
+.social:focus-visible::before { opacity: 1; }
+
+.social:hover,
+.social:focus-visible { transform: translateY(-2px); }
+
+.social__icon {
+  position: relative;   /* above the glow */
+  width: 62%;
+  height: 62%;
+}
+
+/* Filled glyphs can't change font-weight, so thicken them by growing a
+   stroke of the same colour out from the fill. */
+.social__icon path {
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0;
+  stroke-linejoin: round;
+  transition: stroke-width 200ms ease;
+}
+
+.social:hover .social__icon path,
+.social:focus-visible .social__icon path { stroke-width: 0.7; }
+
+/* ── Hero ───────────────────────────────────────────────── */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: clamp(30px, 6vh, 70px) 24px clamp(40px, 7vh, 80px);
+}
+
+/* Wrapper that holds the logo and its glow together. Because the glow is
+   absolutely centred inside this box, the logo always sits dead centre of
+   the green — move or resize either one and they stay aligned. */
+.hero__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* The green halo, shared by the hero and the about section. Each one is
+   centred on its own section; only the width differs. */
+.hero__glow,
+.about__glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  aspect-ratio: 1 / 0.8;
+  background: radial-gradient(ellipse at center, var(--glow) 0%, var(--glow-fade) 62%);
+  pointer-events: none;
+}
+
+.hero__glow  { width: var(--glow-width); }
+.about__glow { width: var(--about-glow-width); }
+
+.hero__logo {
+  position: relative;   /* above the glow */
+  width: var(--logo-width);
+}
+
+.hero__tagline {
+  position: relative;
+  max-width: 52ch;
+  margin: var(--hero-gap) auto 0;   /* the gap below the logo */
+  font-size: var(--fs-tagline);
+  color: var(--text-soft);
+}
+
+.hero__tagline b {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ── Video ──────────────────────────────────────────────── */
+/* The section is only as wide as the video, so the props can be positioned
+   in percentages of it and still line up at every screen size. */
+/* The bottom padding is the gap down to the selfie. It needs to clear the
+   nutrition prop, which hangs below the video's bottom edge. */
+.video {
+  width: var(--video-width);
+  margin: 0 auto;
+  padding-bottom: var(--video-to-about-gap);
+}
+
+/* Anchor box for the props, and the reason they stay glued to the video.
+   A percentage `top` on an absolutely positioned element resolves against
+   its containing block's PADDING BOX — padding included. If the props were
+   anchored to .video, its padding-bottom (which scales with vh) would be
+   counted in their 100%, while the frame scales with vw, so the two would
+   drift apart as the window resized.
+   This stage has no padding, so its height is exactly the frame's height.
+   It must also never get overflow:hidden, or the props would be clipped. */
+.video__stage {
+  position: relative;
+}
+
+.video__frame {
+  position: relative;
+  z-index: 2;            /* props sit either side of this — see .prop below */
+  border-radius: var(--radius);
+  overflow: hidden;      /* clips the poster to the rounded corners */
+}
+
+.video__media {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.video__play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: clamp(58px, 9vw, 84px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(2px);
+  transition: background-color 200ms ease, transform 200ms ease;
+}
+
+.video__play svg { width: 45%; height: 45%; }
+
+.video__play:hover,
+.video__play:focus-visible {
+  background: rgba(255, 255, 255, 0.45);
+  transform: translate(-50%, -50%) scale(1.06);
+}
+
+/* ═══ THE FLOATING PROPS ═══ treeSeed / motherSeed / nutrition.
+   Every number below is a PERCENTAGE OF THE VIDEO BOX, which is why they
+   keep their positions as the window resizes.
+
+   width   size, as a % of the video's width.
+
+   left    horizontal.  0%   = prop's left edge on the video's LEFT edge
+                        100% = prop's left edge on the video's RIGHT edge
+                        negative = out to the left of the video
+
+   top     vertical.    0%   = prop's top edge on the video's TOP edge
+                        100% = prop's top edge on the video's BOTTOM edge
+                        negative = above the video
+
+   transform: translateY(-N%)
+           nudges the prop UP by N% of ITS OWN height. Use it with top:100%
+           to straddle the bottom edge: -50% = half over the video,
+           -70% = mostly over it, -100% = fully above the edge.
+           Bigger N = higher up = more of it covering the video.
+
+   DEPTH   .video__frame is z-index 2, so:
+             z-index 3 (default) = prop sits IN FRONT of the video
+             z-index 1           = prop sits BEHIND, clipped by the video */
+.prop {
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;            /* in front of the video by default */
+}
+
+.prop--tree {
+  width: 18%;
+  left: -20%;
+  top: -18%;
+}
+
+/* Behind the video — only the part sticking out past the right edge shows. */
+.prop--mother {
+  width: 22.5%;
+  left: 95%;
+  top: 8%;
+  z-index: 1;
+}
+
+/* In front of the video, straddling its bottom-left edge.
+   Raise the -70% to lift it further and cover more of the video;
+   lower it toward -50% to drop it back down. */
+.prop--nutrition {
+  width: 28.5%;
+  left: 3%;
+  top: 118%;
+  transform: translateY(-70%);
+}
+
+/* ── About ──────────────────────────────────────────────── */
+.about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 24px clamp(60px, 10vh, 110px);
+}
+
+/* Wrapper sized to the selfie, so the glow inside it is centred on the photo
+   — the same arrangement as .hero__mark and the logo. */
+.about__mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+/* position: relative lifts these above .about__glow. Without it the glow,
+   being absolutely positioned, would paint over them. */
+.about__avatar,
+.about__text,
+.about__follow,
+.about .socials {
+  position: relative;
+}
+
+.about__avatar {
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  max-width: 60vw;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.about__text {
+  max-width: 46ch;
+  margin-top: clamp(20px, 3.5vh, 34px);
+  font-size: var(--fs-about);
+  color: var(--text-soft);
+}
+
+.about__follow {
+  margin-top: clamp(18px, 3vh, 30px);
+  font-size: var(--fs-follow);
+  color: var(--text-soft);
+}
+
+.about .socials { margin-top: clamp(18px, 3vh, 30px); }
+
+/* ── Footer ─────────────────────────────────────────────── */
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  padding: clamp(30px, 6vh, 70px) clamp(16px, 3vw, 32px) clamp(16px, 3vw, 28px);
+}
+
+.footer__link {
+  font-size: var(--fs-imprint);
+  color: var(--text-soft);
+  text-decoration: none;
+  opacity: 0.75;
+  transition: opacity 180ms ease;
+}
+
+.footer__link:hover,
+.footer__link:focus-visible { opacity: 1; }
+
+/* ── Imprint page ───────────────────────────────────────── */
+.legal {
+  max-width: 62ch;
+  margin: 0 auto;
+  padding: clamp(40px, 8vh, 90px) 24px clamp(60px, 10vh, 110px);
+  text-align: left;
+}
+
+.legal h1 {
+  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
+  font-weight: 400;
+  margin-bottom: clamp(20px, 4vh, 36px);
+}
+
+.legal h2 {
+  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-weight: 600;
+  margin: clamp(22px, 4vh, 34px) 0 6px;
+}
+
+.legal p {
+  font-size: var(--fs-about);
+  color: var(--text-soft);
+}
+
+.legal a { color: var(--text); }
+
+.legal__back {
+  display: inline-block;
+  margin-bottom: clamp(20px, 4vh, 34px);
+  font-size: var(--fs-imprint);
+  color: var(--text-soft);
+  text-decoration: none;
+}
+
+.legal__back:hover { color: var(--text); }
+
+/* A visible reminder that the legally required fields are still blank.
+   Delete this rule and the .todo spans once they are filled in. */
+.todo {
+  background: rgba(180, 60, 40, 0.35);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 700px) {
+  /* On a phone the video takes almost the full width, so the props that hang
+     outside it have nowhere to go — pull them inward and trim their size. */
+  :root { --video-width: 88vw; }
+
+  .prop--tree      { width: 22%; left: -13%; top: -15%; }
+  .prop--mother    { width: 27%; left: 90%;  top: 6%;   }
+  .prop--nutrition { width: 37%; left: 0%;   top: 100%; }
+
+  .header { justify-content: space-between; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; }
+}

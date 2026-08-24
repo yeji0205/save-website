@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grain tuner</title>
+<style>
+  body {
+    margin: 0; padding: 32px;
+    background: #adb0a1;
+    color: #fff; font: 300 15px/1.5 "Helvetica Neue", Arial, sans-serif;
+  }
+  h1 { font-size: 20px; font-weight: 300; margin: 0 0 4px; }
+  .hint { opacity: .85; margin: 0 0 24px; max-width: 68ch; }
+  code { font: 400 13px/1 ui-monospace, Menlo, Consolas, monospace;
+         background: rgba(0,0,0,.2); padding: 2px 6px; border-radius: 4px; }
+
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 22px;
+    padding: 16px 20px; margin-bottom: 28px;
+    background: rgba(0,0,0,.12); border-radius: 10px;
+  }
+  .controls label { font-size: 13px; display: grid; gap: 4px; }
+  .controls output { opacity: .85; font-variant-numeric: tabular-nums; }
+
+  .preview {
+    position: relative;
+    height: 260px; border-radius: 10px; overflow: hidden;
+    background: #adb0a1;
+    display: grid; place-items: center;
+    margin-bottom: 12px;
+  }
+  .preview__label { font-size: 34px; font-weight: 300; }
+  .preview__grain {
+    position: absolute; inset: 0;
+    background-repeat: repeat;
+    pointer-events: none;
+  }
+  .snippet {
+    font: 400 13px/1.7 ui-monospace, Menlo, Consolas, monospace;
+    background: rgba(0,0,0,.2); padding: 14px 18px; border-radius: 8px;
+    white-space: pre; overflow-x: auto;
+  }
+</style>
+</head>
+<body>
+
+<h1>Perlin grain tuner</h1>
+<p class="hint">
+  Drag the sliders until the preview looks right, then copy the snippet at the
+  bottom into <code>grain.js</code> and <code>style.css</code>.
+  The texture tiles seamlessly, so the preview shows exactly what the page gets.
+</p>
+
+<div class="controls">
+  <label>Scale — higher = finer
+    <input type="range" id="scale" min="8" max="200" step="4" value="64">
+    <output id="scale-out"></output>
+  </label>
+  <label>Octaves — detail
+    <input type="range" id="octaves" min="1" max="6" step="1" value="4">
+    <output id="octaves-out"></output>
+  </label>
+  <label>Persistence — roughness
+    <input type="range" id="persistence" min="0.1" max="0.9" step="0.05" value="0.55">
+    <output id="persistence-out"></output>
+  </label>
+  <label>Contrast
+    <input type="range" id="contrast" min="0.1" max="1" step="0.05" value="0.9">
+    <output id="contrast-out"></output>
+  </label>
+  <label>Lightness
+    <input type="range" id="lightness" min="0.1" max="0.9" step="0.05" value="0.5">
+    <output id="lightness-out"></output>
+  </label>
+  <label>Seed
+    <input type="range" id="seed" min="1" max="40" step="1" value="7">
+    <output id="seed-out"></output>
+  </label>
+  <label>Strength (CSS opacity)
+    <input type="range" id="opacity" min="0" max="1" step="0.05" value="0.35">
+    <output id="opacity-out"></output>
+  </label>
+</div>
+
+<div class="preview">
+  <div class="preview__grain" id="grain"></div>
+  <span class="preview__label">Heal the world</span>
+</div>
+
+<div class="snippet" id="snippet"></div>
+
+<script type="module">
+  import { buildGrainTexture, GRAIN } from "./grain.js";
+
+  const inputs = ["scale", "octaves", "persistence", "contrast",
+                  "lightness", "seed", "opacity"]
+    .map((id) => document.getElementById(id));
+  const grainEl = document.getElementById("grain");
+  const snippetEl = document.getElementById("snippet");
+
+  function render() {
+    const v = Object.fromEntries(inputs.map((i) => [i.id, Number(i.value)]));
+
+    for (const input of inputs) {
+      document.getElementById(input.id + "-out").textContent = input.value;
+    }
+
+    grainEl.style.backgroundImage =
+      `url("${buildGrainTexture({ ...v, tile: GRAIN.tile })}")`;
+    grainEl.style.backgroundSize = `${GRAIN.tile}px ${GRAIN.tile}px`;
+    grainEl.style.opacity = v.opacity;
+
+    snippetEl.textContent =
+`// grain.js — export const GRAIN = {
+  scale: ${v.scale},
+  octaves: ${v.octaves},
+  persistence: ${v.persistence},
+  contrast: ${v.contrast},
+  lightness: ${v.lightness},
+  tile: ${GRAIN.tile},
+  seed: ${v.seed},
+// }
+
+/* style.css */
+--grain-opacity: ${v.opacity};`;
+  }
+
+  // Regenerating is heavier than the old white noise, so wait for the drag
+  // to settle rather than rebuilding on every pixel of slider movement.
+  let queued;
+  const schedule = () => {
+    clearTimeout(queued);
+    queued = setTimeout(render, 90);
+  };
+
+  inputs.forEach((i) => i.addEventListener("input", schedule));
+  render();
+</script>
+
+</body>
+</html>
