@@ -1,6 +1,6 @@
 /* ── Tokens ─────────────────────────────────────────────── */
 :root {
-  --bg: #adb0a1;
+  --bg: #b7ae8d;
   --text: #ffffff;
   --text-soft: rgba(255, 255, 255, 0.9);
   --glow: rgba(120, 196, 88, 0.55);
@@ -26,13 +26,21 @@
   --about-glow-width: min(680px, 94vw); /* green halo behind the selfie     */
   --hero-gap: clamp(40px, 7vh, 84px);   /* space between logo and tagline */
 
+  /* Hero tagline width. Two limits, whichever is smaller wins:
+       100%                     = the hero's content box, which its 5vw
+                                  padding makes 90% of the screen (mobile)
+       --logo-width x 2         = twice the wordmark (desktop)
+     Tied to the logo on purpose: resize the logo and the text follows.
+     For a fixed width instead, just put a value here, e.g. 640px. */
+  --tagline-width: min(100%, calc(var(--logo-width) * 2.2));
+
   /* Video width is a proportion of the window: 60vw = 60% of screen width,
      matching the mockup. The clamp stops it getting silly on a tiny phone
      or a very wide monitor. The props are positioned in % of THIS, so they
      scale with it automatically. Overridden to 88vw on small screens. */
   --video-width: clamp(300px, 60vw, 900px);
 
-  --avatar-size: 156px;                 /* the selfie */
+  --avatar-size: 250px;                 /* the selfie */
   --video-to-about-gap: clamp(110px, 24vh, 300px);  /* video → selfie */
 
   --social-size: 64px;                  /* icons in the about section */
@@ -53,8 +61,14 @@ img { display: block; max-width: 100%; height: auto; }
 button { font: inherit; color: inherit; background: none; border: 0; }
 
 /* ── Base ───────────────────────────────────────────────── */
-/* <html> is painted so the canvas and overscroll area are sage. */
-html { background-color: var(--bg); }
+/* <html> is painted so the canvas and overscroll area take the page colour.
+   overflow-x is set here as well as on <body>: body alone is unreliable on
+   mobile browsers, and this guarantees anything hanging off the right edge
+   is clipped instead of making the page pan sideways. */
+html {
+  background-color: var(--bg);
+  overflow-x: hidden;
+}
 
 body {
   min-height: 100vh;
@@ -221,11 +235,14 @@ body::after {
 .social:focus-visible .social__icon path { stroke-width: 0.7; }
 
 /* ── Hero ───────────────────────────────────────────────── */
+/* The 5vw left/right padding leaves the content exactly 90% of the screen
+   width — that is the mobile limit. On desktop the tagline's own max-width
+   takes over long before this matters. */
 .hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: clamp(30px, 6vh, 70px) 24px clamp(40px, 7vh, 80px);
+  padding: clamp(30px, 6vh, 70px) 5vw clamp(40px, 7vh, 80px);
 }
 
 /* Wrapper that holds the logo and its glow together. Because the glow is
@@ -260,7 +277,7 @@ body::after {
 
 .hero__tagline {
   position: relative;
-  max-width: 52ch;
+  max-width: var(--tagline-width);
   margin: var(--hero-gap) auto 0;   /* the gap below the logo */
   font-size: var(--fs-tagline);
   color: var(--text-soft);
@@ -498,13 +515,25 @@ body::after {
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 700px) {
-  /* On a phone the video takes almost the full width, so the props that hang
-     outside it have nowhere to go — pull them inward and trim their size. */
-  :root { --video-width: 88vw; }
+  /* 80vw, not more: the props hang off the sides of the video, so they need
+     margin to show in. 80vw leaves 10vw either side — enough for motherSeed
+     to clear the right edge without pushing the page off-screen. */
+  :root { --video-width: 80vw; }
 
   .prop--tree      { width: 22%; left: -13%; top: -15%; }
-  .prop--mother    { width: 27%; left: 90%;  top: 6%;   }
-  .prop--nutrition { width: 37%; left: 0%;   top: 100%; }
+
+  /* motherSeed sits BEHIND the video, so only the part past 100% is visible.
+     Here that is 112% - 100% = 12% of the video's width showing.
+     Ceiling: left + width must stay under ~112%. The video is 80vw with 10vw
+     margins, so 112% lands right at the screen edge — go past it and the page
+     becomes horizontally scrollable. Raise `left` to reveal more of the prop,
+     but drop `width` by the same amount to stay under the ceiling. */
+  .prop--mother    { width: 26%; left: 86%;  top: 6%;   }
+
+  /* nutrition is deliberately NOT overridden here. It sits inside the video's
+     own box rather than hanging off an edge, and its width/top are percentages
+     of the video, so the desktop values already scale correctly. An override
+     with a different top would only shift it out of place. */
 
   .header { justify-content: space-between; }
 }

@@ -11,10 +11,10 @@
 export const STRINGS = {
   en: {
     tagline:
-      "Finally, we land on Earth, ancient, forgotten, yet still breathing.<br>" +
-      "Plant the Mother Tree, She is our only hope. Protect her. Nurture her.<br> " +
-      "Let her heal what we have broken.<br>" +
-      "Stand between her and the dark.<br>" +
+      "Finally, we land on Earth, ancient, forgotten, yet still breathing. " +
+      "Plant the Mother Tree, She is our only hope. <br>" +
+      "Protect her. Nurture her. Let her heal what we have broken. " +
+      "Stand between her and the dark. " +
       "Can we bring the green back? <b>Can the Earth forgive us?</b>",
     about:
       "We are a couple that is working on this game and we really need your " +
