@@ -417,6 +417,25 @@ body::after {
   object-fit: cover;     /* poster fills the frame rather than letterboxing */
 }
 
+/* Invisible tap target for fullscreen on phones — see index.html for why the
+   <video> cannot do this itself. Desktop has no need for it: the native
+   controls already carry a fullscreen button. */
+.video__expand {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 44px;          /* leaves the native control bar tappable */
+  z-index: 3;
+  cursor: pointer;
+  background: none;
+}
+
+@media (max-width: 860px) {
+  .video__expand { display: block; }
+}
+
 /* ═══ THE FLOATING PROP ═══ treeSeed.
    In the new design the video carries one cut-out, straddling its bottom
    edge; motherSeed and nutrition moved down into the feature rows.
@@ -740,6 +759,15 @@ body::after {
      and the glow offsets are all derived from this, so they follow along on
      their own. */
   :root { --logo-width: min(196px, 38.5vw); }
+
+  /* Give the video back the width the desktop treatment costs it. The 0.9
+     inset is a composition choice for wide screens; on a phone it is just
+     lost pixels, so it goes to 1 and the gutter shrinks to a hairline.
+     Together that is ~14% more video on a 375px screen. */
+  :root {
+    --video-scale: 1;
+    --page-gutter: 8px;
+  }
 
   /* The video prop sits inside the video's own box now rather than hanging
      off an edge, and its width/top are percentages of the video, so the

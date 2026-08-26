@@ -84,6 +84,14 @@
                preload="auto"
                playsinline
                width="1920" height="1080"></video>
+
+        <!-- Mobile-only tap target that opens the video fullscreen.
+             It cannot be the <video> itself: playsinline is required for the
+             inline autoplay loop, and with it iOS will not fullscreen on its
+             own. So a tap has to ask explicitly.
+             It stops short of the bottom edge so it never swallows taps meant
+             for the native control bar. Hidden entirely on desktop. -->
+        <button type="button" class="video__expand" data-i18n-label="fullscreen"></button>
       </div>
 
       <!-- One cut-out prop now. motherSeed and nutrition moved down into the
