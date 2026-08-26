@@ -395,13 +395,15 @@ body::after {
   margin-inline: auto;
 }
 
-/* The dark background is what fills the frame before the poster paints. */
+/* Matches the page, not the video: the poster is the wordmark on the sage
+   background, so any moment before it paints should blend in rather than
+   flash a dark rectangle. */
 .video__frame {
   position: relative;
   z-index: 2;            /* props sit either side of this — see .prop below */
   border-radius: var(--radius);
   overflow: hidden;      /* clips the video to the rounded corners */
-  background: #241f1b;
+  background: var(--bg);
 }
 
 /* A self-hosted <video> with native controls.
@@ -413,7 +415,7 @@ body::after {
   height: auto;
   aspect-ratio: 16 / 9;
   border: 0;
-  background: #241f1b;
+  background: var(--bg);
   object-fit: cover;     /* poster fills the frame rather than letterboxing */
 }
 
