@@ -58,15 +58,17 @@
   <section class="video">
     <!-- The trailer, served from this site. No YouTube, no third party.
 
-         preload="none" is deliberate: the file is large, so nothing is
-         fetched until someone presses play. Without it every visitor would
-         download it just for scrolling past.
+         muted is REQUIRED for autoplay — every browser blocks autoplay with
+         sound. Drop it and the video silently refuses to start. The controls
+         are how someone turns the sound on.
 
-         No autoplay, for the same reason — an unprompted download of this
-         size is not something to inflict on a phone. controls are native, so
-         play/pause/scrub/volume all work and sound needs no special button.
+         preload="auto" follows from autoplay: the file has to be fetched for
+         playback to begin, so this cannot be preload="none" any more. That
+         means the full download now starts on page load for every visitor,
+         not only for people who press play.
 
-         The poster is what fills the frame until playback starts. -->
+         The poster fills the frame until the first frame is decoded. -->
+
     <!-- The stage is exactly the size of the video frame, with no padding of
          its own. The prop is positioned against IT, so its percentages
          always resolve against the video's real box. -->
@@ -76,7 +78,10 @@
                src="asset/SAVE_Trailer.mp4"
                poster="asset/trailer_poster.webp"
                controls
-               preload="none"
+               autoplay
+               muted
+               loop
+               preload="auto"
                playsinline
                width="1920" height="1080"></video>
       </div>
