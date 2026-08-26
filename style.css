@@ -68,6 +68,11 @@
      Raise the ceiling for a thicker band, lower it for a thinner one. */
   --page-gutter: clamp(12px, 2vw, 36px);
 
+  /* Scales the video down inside that full-bleed box. 1 = edge to edge minus
+     the gutter; 0.9 is 10% narrower, centred. The prop is positioned against
+     the same box, so it shrinks and stays put along with the video. */
+  --video-scale: 0.9;
+
   /* The features rows and the text columns share this. Derived from the
      mockup, where content spans 4087 of 5227px — 78% of the page.
 
@@ -386,44 +391,30 @@ body::after {
    It must also never get overflow:hidden, or the props would be clipped. */
 .video__stage {
   position: relative;
+  width: calc(var(--video-scale) * 100%);
+  margin-inline: auto;
 }
 
+/* The dark background is what fills the frame before the poster paints. */
 .video__frame {
   position: relative;
   z-index: 2;            /* props sit either side of this — see .prop below */
   border-radius: var(--radius);
-  overflow: hidden;      /* clips the poster to the rounded corners */
+  overflow: hidden;      /* clips the video to the rounded corners */
+  background: #241f1b;
 }
 
+/* A self-hosted <video> with native controls.
+   width:100% is load-bearing — without it the element takes its intrinsic
+   1920x1080 and overflows the frame, which then just clips it. */
 .video__media {
+  display: block;
   width: 100%;
+  height: auto;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-
-.video__play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
-  width: clamp(58px, 9vw, 84px);
-  aspect-ratio: 1;
-  border-radius: 50%;
-  cursor: pointer;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.28);
-  backdrop-filter: blur(2px);
-  transition: background-color 200ms ease, transform 200ms ease;
-}
-
-.video__play svg { width: 45%; height: 45%; }
-
-.video__play:hover,
-.video__play:focus-visible {
-  background: rgba(255, 255, 255, 0.45);
-  transform: translate(-50%, -50%) scale(1.06);
+  border: 0;
+  background: #241f1b;
+  object-fit: cover;     /* poster fills the frame rather than letterboxing */
 }
 
 /* ═══ THE FLOATING PROP ═══ treeSeed.
@@ -654,14 +645,17 @@ body::after {
   text-align: left;
 }
 
+/* One size for the whole page, headings included. Weight is the only thing
+   separating them from the body text — h1 matches h2 so the title cannot end
+   up looking weaker than the sections beneath it. */
 .legal h1 {
-  font-size: clamp(1.4rem, 2.6vw, 1.9rem);
-  font-weight: 400;
+  font-size: var(--fs-about);
+  font-weight: 600;
   margin-bottom: clamp(20px, 4vh, 36px);
 }
 
 .legal h2 {
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
+  font-size: var(--fs-about);
   font-weight: 600;
   margin: clamp(22px, 4vh, 34px) 0 6px;
 }
@@ -676,7 +670,7 @@ body::after {
 .legal__back {
   display: inline-block;
   margin-bottom: clamp(20px, 4vh, 34px);
-  font-size: var(--fs-imprint);
+  font-size: var(--fs-about);   /* same size as the body text, not smaller */
   color: var(--text-soft);
   text-decoration: none;
 }

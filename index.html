@@ -56,21 +56,29 @@
   <!-- ── Video ────────────────────────────────────────────── -->
   <!-- Sits above the wordmark now — that is the order in the new design. -->
   <section class="video">
-    <!-- PLACEHOLDER. When the .mp4 is ready, replace the <img> below with:
-           <video class="video__media" poster="asset/poster.jpg" playsinline
-                  src="asset/trailer.mp4"></video>
-         and main.js will wire the play button to it automatically. -->
+    <!-- The trailer, served from this site. No YouTube, no third party.
+
+         preload="none" is deliberate: the file is large, so nothing is
+         fetched until someone presses play. Without it every visitor would
+         download it just for scrolling past.
+
+         No autoplay, for the same reason — an unprompted download of this
+         size is not something to inflict on a phone. controls are native, so
+         play/pause/scrub/volume all work and sound needs no special button.
+
+         The poster is what fills the frame until playback starts. -->
     <!-- The stage is exactly the size of the video frame, with no padding of
          its own. The prop is positioned against IT, so its percentages
          always resolve against the video's real box. -->
     <div class="video__stage">
       <div class="video__frame">
-        <img class="video__media" src="asset/destroyed.png" alt="" width="1280" height="720">
-        <button type="button" class="video__play" data-i18n-label="playVideo">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path fill="currentColor" d="M9 6.5v11l9-5.5-9-5.5Z"/>
-          </svg>
-        </button>
+        <video class="video__media"
+               src="asset/SAVE_Trailer.mp4"
+               poster="asset/trailer_poster.webp"
+               controls
+               preload="none"
+               playsinline
+               width="1920" height="1080"></video>
       </div>
 
       <!-- One cut-out prop now. motherSeed and nutrition moved down into the

@@ -7,3 +7,8 @@ dist/
 # the files have arrived named both gif_N.gif and git_N.gif.
 asset/gif_*.gif
 asset/git_*.gif
+
+# Pre-remux backup of the trailer. The shipped asset/SAVE_Trailer.mp4 is the
+# same footage with its moov index moved to the front so playback can start
+# before the whole file downloads. Keeping both in history would be 166MB.
+asset/*.original.mp4
