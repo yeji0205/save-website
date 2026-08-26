@@ -3,10 +3,19 @@
   --bg: #b7ae8d;
   --text: #ffffff;
   --text-soft: rgba(255, 255, 255, 0.9);
+
+  /* The pale green the design uses for the closing line of the tagline.
+     Sampled straight out of the Figma text, not eyeballed. */
+  --accent: #d5f9a0;
   --glow: rgba(120, 196, 88, 0.55);
   --glow-fade: rgba(120, 196, 88, 0);   /* same green, fully transparent */
 
   --font: "KoHo", "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+
+  /* Inter, used for the feature paragraphs only — everything else is KoHo.
+     Both are loaded in one request from index.html. */
+  --font-alt: "Inter", system-ui, -apple-system, "Segoe UI", Roboto,
+              "Helvetica Neue", Arial, sans-serif;
 
   /* ── FONT SIZES ── all of them, nothing set anywhere else.
      Each is clamp(SMALLEST, SCALES-WITH-WINDOW, LARGEST):
@@ -15,33 +24,38 @@
        - last value   = size on a wide desktop, never goes above this
      To make something a fixed size, replace the whole clamp() with one
      value, e.g. --fs-tagline: 1rem;   (1rem = 16px) */
-  --fs-tagline: clamp(0.9rem, 1.5vw, 1.05rem);   /* hero paragraph     */
-  --fs-about:   clamp(0.85rem, 1.4vw, 1rem);     /* about paragraph    */
-  --fs-follow:  clamp(0.85rem, 1.4vw, 1rem);     /* "support and…"     */
-  --fs-lang:    clamp(0.8rem, 1.2vw, 0.9rem);    /* DE / EN            */
+  /* Hero paragraph. Independent of --fs-feature-text on purpose: it was
+     briefly aliased to it, which meant later shrinks to the feature text
+     dragged the hero down with them. This is the size the hero settled on;
+     change it here and nowhere else. */
+  --fs-tagline: clamp(0.96rem, 1.56vw, 1.14rem);
+  --fs-about:   clamp(1.02rem, 1.68vw, 1.2rem);  /* about paragraph    */
+  --fs-follow:  clamp(1.02rem, 1.68vw, 1.2rem);  /* "support and…"     */
+  --fs-lang:    clamp(0.8rem, 1.5vw, 1.5rem);    /* DE / EN            */
   --fs-imprint: clamp(0.75rem, 1.1vw, 0.85rem);  /* footer             */
-  --fs-feature-title: clamp(1.15rem, 2.1vw, 1.6rem); /* "Bring back life" */
-  --fs-feature-text:  clamp(0.8rem, 1.3vw, 0.95rem); /* feature paragraph */
+  --fs-feature-title: clamp(1.26rem, 2.32vw, 1.76rem); /* feature heading   */
+  --fs-feature-text:  clamp(0.73rem, 1.19vw, 0.88rem); /* feature paragraph */
 
   --logo-width: min(280px, 55vw);       /* hero wordmark */
-  /* Green halo behind the wordmark (grad_green.svg). Measured off the
-     mockup, where the blob is 3.2x the width of the logo and sits low and
-     slightly left of it — it spreads down over the tagline rather than
-     ringing the logo. Tied to --logo-width so resizing the logo carries the
-     halo with it. The vw cap stops it swallowing a phone screen. */
+  /* Green halo behind the hero (grad_green.svg), 3.2x the width of the
+     wordmark. Tied to --logo-width so resizing the logo carries the halo
+     with it. The vw cap stops it swallowing a phone screen. It is centred
+     on the whole hero section — see .hero__glow. */
   --glow-width: min(calc(var(--logo-width) * 3.2), 130vw);
-  --glow-shift-x: calc(var(--logo-width) * -0.26);
-  --glow-shift-y: calc(var(--logo-width) * 0.62);
 
   --hero-gap: clamp(40px, 7vh, 84px);   /* space between logo and tagline */
 
   /* Hero tagline width. Two limits, whichever is smaller wins:
        100%                     = the hero's content box, which its 5vw
                                   padding makes 90% of the screen (mobile)
-       --logo-width x 2         = twice the wordmark (desktop)
+       --logo-width x 2.05      = just over twice the wordmark (desktop)
      Tied to the logo on purpose: resize the logo and the text follows.
-     For a fixed width instead, just put a value here, e.g. 640px. */
-  --tagline-width: min(100%, calc(var(--logo-width) * 2.2));
+     2.05 lands the block at ~40% of a 1440px window, i.e. roughly 30%
+     margin either side, which is the shape in the mockup — narrow enough
+     that the paragraph breaks into five shortish lines rather than four
+     long ones. Raise it for a wider block, lower it for a narrower one.
+     For a fixed width instead, just put a value here, e.g. 580px. */
+  --tagline-width: min(100%, calc(var(--logo-width) * 2.05));
 
   /* The strip of background left either side of the video. The video is
      full-bleed MINUS this, so it keeps growing on a wide monitor instead of
@@ -55,17 +69,35 @@
   --page-gutter: clamp(12px, 2vw, 36px);
 
   /* The features rows and the text columns share this. Derived from the
-     mockup: content spans 4087 of 5227px, ~78% of the page. */
-  --content-width: min(1180px, 92vw);
+     mockup, where content spans 4087 of 5227px — 78% of the page.
+
+     The 78 is doing real work, not just matching the mockup: the cut-out
+     props hang off the screenshots by up to ~19% of a screenshot's width,
+     and the only place they have to hang INTO is the page margin either
+     side of this band. 78vw leaves 11vw of margin against a worst-case
+     overhang of ~7vw, so they always clear. Push this toward 92vw and the
+     margin drops below the overhang and the props get clipped — which is
+     exactly what happened before. Widen it only if you also pull the prop
+     offsets in to match. (Below 860px the rows stack and the screenshot
+     goes full width, so that case is handled by padding instead.) */
+  --content-width: min(1180px, 78vw);
 
   /* Vertical space between the four feature rows. */
   --feature-gap: clamp(56px, 9vh, 130px);
 
-  /* The selfie. The new design shrinks it a lot — 312px in a 5227px mockup
-     is ~6% of the page, i.e. roughly 86px at a 1440px window. */
-  --avatar-size: clamp(76px, 7vw, 100px);
+  /* How much bigger the row gradients are than their measured size. The
+     per-row width/left/top below place each blob where the mockup has it;
+     this grows them from there so their edges read around the screenshot
+     instead of hiding behind it. Scaling (rather than editing the four
+     widths) keeps each blob centred exactly where it was, so one number
+     tunes all four. 1 = as measured. */
+  --glow-scale: 1.2;
 
-  --video-gap-below: clamp(110px, 24vh, 300px);  /* video → wordmark */
+  /* The selfie. The mockup has it at ~6% of the page (roughly 86px at a
+     1440px window); these numbers are that baseline plus 50%. */
+  --avatar-size: clamp(114px, 20.5vw, 200px);
+
+  --video-gap-below: clamp(48px, 10vh, 130px);   /* video → wordmark */
 
   --social-size: 64px;                  /* icons in the about section */
   --social-size-sm: 54px;               /* icons in the header        */
@@ -107,7 +139,6 @@ body {
   color: var(--text);
   font-family: var(--font);
   font-weight: 300;
-  font-style: italic;          /* the whole design is italic */
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   text-align: center;
@@ -286,14 +317,12 @@ body::after {
 
    The social discs still use the --glow / --glow-fade tokens for their hover
    halo; those are deliberately left alone. */
+/* Dead centre of .hero — both axes, no offsets. */
 .hero__glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(
-    calc(-50% + var(--glow-shift-x)),
-    calc(-50% + var(--glow-shift-y))
-  );
+  transform: translate(-50%, -50%);
   width: var(--glow-width);
   max-width: none;              /* beat the global img { max-width: 100% } */
   aspect-ratio: 4051 / 3655;
@@ -307,17 +336,27 @@ body::after {
   width: var(--logo-width);
 }
 
+/* Full white and weight 500, both taken from the design — not the softer
+   --text-soft the other paragraphs use. */
 .hero__tagline {
   position: relative;
   max-width: var(--tagline-width);
   margin: var(--hero-gap) auto 0;   /* the gap below the logo */
   font-size: var(--fs-tagline);
-  color: var(--text-soft);
+  font-weight: 500;
+  color: var(--text);
 }
 
+/* The closing line. It is set apart by COLOUR only — same weight as the rest
+   of the paragraph, which is how the design has it. The tag stays <b> so the
+   i18n strings do not have to change. */
 .hero__tagline b {
-  font-weight: 600;
-  color: var(--text);
+  font-weight: inherit;
+  color: var(--accent);
+  /* Keeps the green phrase together: it moves to the next line as a whole
+     rather than leaving "forgive us?" orphaned on its own. It still wraps
+     internally if the line ever gets narrower than the phrase itself. */
+  display: inline-block;
 }
 
 /* ── Video ──────────────────────────────────────────────── */
@@ -423,7 +462,7 @@ body::after {
    Raise the -43.5% to lift it further and cover more of the video;
    lower it toward -20% to drop it back down. */
 .prop--tree {
-  width: 16.3%;
+  width: 13%;            /* 20% down from the measured 16.3% */
   left: 75.8%;
   top: 100%;
   transform: translateY(-43.5%);
@@ -472,20 +511,30 @@ body::after {
   height: auto;
   pointer-events: none;
   user-select: none;
+  /* Grows about its own centre, so the measured left/top below still put
+     the blob in the same place — only its edges reach further out. */
+  transform: scale(var(--glow-scale));
 }
 
-.feature__glow--1 { width: 59.1%; left: -2.7%; top: -18.8%; }
-.feature__glow--2 { width: 65.8%; left: 40.4%; top: -45.5%; }
-.feature__glow--3 { width: 49.6%; left: -4.1%; top: -48.1%; }
-.feature__glow--4 { width: 71.7%; left: 34.5%; top: -37.0%; }
+.feature__glow--1 { width: 69.1%; left: -2.7%; top: -38.8%; }
+.feature__glow--2 { width: 65.8%; left: 45.4%; top: -65.5%; }
+.feature__glow--3 { width: 60.6%; left: -4.1%; top: -48.1%; }
+.feature__glow--4 { width: 71.7%; left: 44.5%; top: -47.0%; }
 
 /* The screenshot. Its box is the anchor for the row's cut-out prop, so the
    prop's percentages resolve against the screenshot and not the whole row.
    overflow stays visible here — the props deliberately break the edges — so
    the rounded corners go on the <img> itself. */
+/* min-width:0 is load-bearing. Flex items default to min-width:auto, which
+   refuses to shrink below the content's own minimum — and for the lazy
+   animated row that minimum is the <img>'s width attribute (960px), because
+   before the file loads there is no real intrinsic size to shrink against.
+   The result was row 1 blowing out to 960px and crushing its text column to
+   126px until you scrolled the image into view. */
 .feature__shot {
   position: relative;
   flex: 0 1 50%;
+  min-width: 0;
 }
 
 .feature__shot > img { border-radius: var(--radius); }
@@ -499,43 +548,54 @@ body::after {
   user-select: none;
 }
 
-.feature__prop--seed      { width: 30.0%; left:  15.0%; top:  55.3%; }
+/* seed straddles the screenshot's LEFT EDGE low down, rather than sitting
+   inside the frame over the game's UI buttons. */
+.feature__prop--seed      { width: 22.0%; left: -10.0%; top:  70.0%; }
 .feature__prop--nutrition { width: 38.4%; left:  80.3%; top: -34.2%; }
 .feature__prop--enemy     { width: 31.9%; left: -13.8%; top:  74.3%; }
 
+/* The text block is deliberately narrower than the half-row it sits in, and
+   centred within it, while the words inside stay left-aligned. Constraining
+   the BODY rather than the heading and paragraph separately is what keeps
+   their left edges on the same line — both are plain blocks filling this
+   box, so they share its edge no matter how long each one is.
+   The auto margins do the centring: the flex item grows until it hits
+   max-width, and the leftover space is split between them. */
 .feature__body {
   position: relative;
   flex: 1 1 0;
-}
-
-/* Rows 1 and 3 carry a second heading on the same line as the first. Rows 2
-   and 4 just hold the one, so this collapses to a plain block for them. */
-.feature__titles {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: clamp(14px, 2.5vw, 44px);
+  min-width: 0;          /* same reason as .feature__shot above */
+  max-width: 21rem;
+  margin-inline: auto;
 }
 
 .feature__title {
   font-size: var(--fs-feature-title);
-  font-weight: 400;
+  font-weight: 500;      /* same weight as the tagline */
   line-height: 1.25;
 }
 
+/* The one place the page uses Inter rather than KoHo, and full white rather
+   than the softened --text-soft the other paragraphs take.
+   No max-width of its own — .feature__body sets the measure for both this
+   and the heading, so the two share a left edge. */
 .feature__text {
-  max-width: 34ch;
   margin-top: clamp(12px, 2vh, 22px);
+  font-family: var(--font-alt);
   font-size: var(--fs-feature-text);
-  color: var(--text-soft);
+  color: var(--text);
 }
 
 /* ── About ──────────────────────────────────────────────── */
+/* The top padding is the break from the feature rows. It stacks with the
+   bottom padding on .features (~90px), landing the total near the ~140px the
+   mockup leaves there — the about block needs a clearer separation than the
+   gap between two feature rows, or it reads as a fifth row. */
 .about {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 24px clamp(60px, 10vh, 110px);
+  padding: clamp(44px, 7.5vh, 90px) 24px clamp(60px, 10vh, 110px);
 }
 
 /* Order is paragraph → selfie → follow line → socials, which is what the new
@@ -635,6 +695,19 @@ body::after {
 /* Two columns stop working well before the phone breakpoint, so the feature
    rows stack on their own, earlier. */
 @media (max-width: 860px) {
+  /* Stacked, the screenshot fills the row, so the cut-outs that hang off its
+     edges would run straight off the screen and get clipped. Padding pulls
+     the screenshot in and gives them somewhere to sit — it is the breathing
+     room the props need, not decoration, so keep it at least as wide as the
+     furthest prop overhang below.
+
+     Because that padding is now doing the job the page margin does on wider
+     screens, the band itself can go back to the full 92vw here. */
+  .features {
+    --content-width: min(1180px, 92vw);
+    padding-inline: clamp(26px, 8vw, 56px);
+  }
+
   .feature,
   .feature--right {
     flex-direction: column;
@@ -643,14 +716,14 @@ body::after {
     text-align: center;
   }
 
-  .feature__shot,
-  .feature__body { flex: 0 0 auto; width: 100%; }
+  /* Stacked, the text centres under its screenshot and the desktop measure
+     is lifted — a narrow phone column is its own constraint. */
+  .feature__shot { flex: 0 0 auto; width: 100%; }
 
-  .feature__titles { justify-content: center; }
-
-  .feature__text {
-    max-width: 46ch;
-    margin-inline: auto;
+  .feature__body {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: none;
   }
 
   /* One glow treatment for every row once they are stacked — the measured
@@ -669,6 +742,11 @@ body::after {
 }
 
 @media (max-width: 700px) {
+  /* Wordmark drops to 70% of its desktop size. --tagline-width, --glow-width
+     and the glow offsets are all derived from this, so they follow along on
+     their own. */
+  :root { --logo-width: min(196px, 38.5vw); }
+
   /* The video prop sits inside the video's own box now rather than hanging
      off an edge, and its width/top are percentages of the video, so the
      desktop values already scale correctly — no override needed. */

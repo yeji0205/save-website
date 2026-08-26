@@ -27,32 +27,21 @@ export const STRINGS = {
     tiktok: "save on TikTok, @save.nature.game",
     steam: "save on Steam",
 
-    /* ── Features ──
-       TODO: f1Text–f4Text are still the placeholder paragraph the Figma
-       file uses for every row. They are separate keys on purpose, so each
-       one can be replaced with its own copy without touching the others. */
-    f1Title: "Bring back life",
-    f1Aside: "Plant Mothertree",
-    f1Text:
-      "We are a couple that is working on this game and we really need your " +
-      "valuable feedback. We would love to inform you when our first playtest " +
-      "is ready.",
-    f2Title: "Manage resources",
+    /* ── Features ── */
+    f1Title: "Plant the Mothertree<br>and Keep it alive",
+    f1Text: "Everything begins with a seed.<br> Everything ends if it dies.",
+
+    f2Title: "Manage Resources",
     f2Text:
-      "We are a couple that is working on this game and we really need your " +
-      "valuable feedback. We would love to inform you when our first playtest " +
-      "is ready.",
-    f3Title: "Protect it",
-    f3Aside: "Defeat enemies",
+      "Collect. Heal the area. Plant new trees.<br> " +
+      "Feed the Mothertree, and the earth beneath it.",
+
+    f3Title: "Fight what you broke",
     f3Text:
-      "We are a couple that is working on this game and we really need your " +
-      "valuable feedback. We would love to inform you when our first playtest " +
-      "is ready.",
+      "The earth remembers. Its creatures will come for you, and for the Mothertree.",
+
     f4Title: "Build your Base",
-    f4Text:
-      "We are a couple that is working on this game and we really need your " +
-      "valuable feedback. We would love to inform you when our first playtest " +
-      "is ready.",
+    f4Text: "As the Mothertree grows, it shelters you.",
   },
 
   de: {
@@ -75,32 +64,24 @@ export const STRINGS = {
     steam: "save auf Steam",
 
     /* ── Features ──
-       TODO: same placeholder as the English side, and the headings below are
-       my translations of the English ones — the Figma file only has English
-       here, so please check the wording. "sie" for the Mother Tree follows
-       the tagline above, which already treats her as feminine. */
-    f1Title: "Bring das Leben zurück",
-    f1Aside: "Pflanze den Mutterbaum",
-    f1Text:
-      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
-      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
-      "benachrichtigen, sobald unser erster Playtest bereit ist.",
+       TODO: my translations of the new English copy — please check the
+       wording. "sie" for the Mother Tree follows the tagline above, which
+       already treats her as feminine even though "Mutterbaum" is masculine;
+       switch both to "ihn"/"er" if you would rather it agree grammatically. */
+    f1Title: "Pflanze den Mutterbaum<br>und halte sie am Leben",
+    f1Text: "Alles beginnt mit einem Samen. Alles endet, wenn er stirbt.",
+
     f2Title: "Verwalte Ressourcen",
     f2Text:
-      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
-      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
-      "benachrichtigen, sobald unser erster Playtest bereit ist.",
-    f3Title: "Beschütze sie",
-    f3Aside: "Besiege Feinde",
+      "Sammle. Heile das Land. Pflanze neue Bäume.<br> " +
+      "Nähre den Mutterbaum und die Erde unter ihr.",
+
+    f3Title: "Kämpfe gegen das, was du zerstört hast",
     f3Text:
-      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
-      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
-      "benachrichtigen, sobald unser erster Playtest bereit ist.",
+      "Die Erde erinnert sich. Ihre Kreaturen werden dich holen — und den Baum.",
+
     f4Title: "Baue deine Basis",
-    f4Text:
-      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
-      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
-      "benachrichtigen, sobald unser erster Playtest bereit ist.",
+    f4Text: "Während der Mutterbaum wächst, schenkt sie dir Schutz.",
   },
 };
 

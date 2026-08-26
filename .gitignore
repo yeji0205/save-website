@@ -1,3 +1,9 @@
 node_modules/
 dist/
 .DS_Store
+
+# Source animations. The web build ships the compressed asset/*.webp instead;
+# these multi-MB originals stay local for re-encoding. Both spellings, since
+# the files have arrived named both gif_N.gif and git_N.gif.
+asset/gif_*.gif
+asset/git_*.gif

@@ -7,12 +7,14 @@
   <meta name="description" content="save — plant the Mother Tree and heal the world.">
   <link rel="icon" href="asset/favicon.svg" type="image/svg+xml">
 
-  <!-- KoHo. Weights: 300 body, 400 fallback, 600 for the bold line.
-       Italic cuts are loaded too — the whole design is italic. -->
+  <!-- Two families, one request:
+       KoHo, upright only — the design is not italic. Weights: 300 body,
+       400 fallback, 500 for the tagline and feature titles, 600 spare.
+       Inter 300/400 — used only for the feature paragraphs (--font-alt). -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=KoHo:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap">
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400&family=KoHo:wght@300;400;500;600&display=swap">
 
   <link rel="stylesheet" href="style.css">
 </head>
@@ -41,13 +43,13 @@
         </svg>
       </a>
 
-      <!-- TODO: real Steam store URL. Until then this link goes nowhere. -->
+      <!-- TODO: real Steam store URL. Until then this link goes nowhere. 
       <a class="social" href="#"
          target="_blank" rel="noopener noreferrer" data-i18n-label="steam">
         <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M11.98 0C5.68 0 .51 4.86.02 11.04l6.43 2.66c.55-.37 1.2-.59 1.91-.59.07 0 .13 0 .19.01l2.86-4.15v-.06c0-2.49 2.03-4.52 4.53-4.52s4.52 2.03 4.52 4.53-2.03 4.52-4.52 4.52h-.11l-4.08 2.91v.16c0 1.88-1.51 3.4-3.39 3.4-1.64 0-3.02-1.17-3.33-2.73L.44 15.27C1.86 20.31 6.49 24 11.98 24c6.63 0 12-5.37 12-12s-5.37-12-12-12ZM7.54 18.21l-1.47-.61c.26.54.71 1 1.31 1.25 1.3.54 2.8-.08 3.34-1.37.26-.63.26-1.32 0-1.95a2.55 2.55 0 0 0-1.38-1.38 2.57 2.57 0 0 0-1.88-.03l1.52.63c.96.4 1.41 1.5 1.01 2.46-.4.95-1.5 1.4-2.46 1Zm11.42-9.3c0-1.67-1.36-3.02-3.02-3.02s-3.02 1.35-3.02 3.02 1.35 3.01 3.02 3.01 3.02-1.35 3.02-3.01Zm-5.28 0c0-1.26 1.02-2.27 2.27-2.27s2.26 1.01 2.26 2.27-1.01 2.26-2.26 2.26-2.27-1.01-2.27-2.26Z"/>
         </svg>
-      </a>
+      </a>-->
     </nav>
   </header>
 
@@ -81,11 +83,14 @@
 
   <!-- ── Hero ─────────────────────────────────────────────── -->
   <section class="hero">
-    <!-- The glow lives inside this wrapper so it is centred on the logo
-         itself, not on the section. It is grad_green.svg — the exported
-         gradient from the design (node 2209:1342). -->
+    <!-- grad_green.svg, the gradient exported from the design (node
+         2209:1342). It is a direct child of the section, not of .hero__mark,
+         so it centres on the hero as a whole — logo AND tagline — rather
+         than on the wordmark alone. First child, so it paints behind the
+         content without needing a negative z-index. -->
+    <img class="hero__glow" src="asset/grad_green.svg" alt="" aria-hidden="true">
+
     <div class="hero__mark">
-      <img class="hero__glow" src="asset/grad_green.svg" alt="" aria-hidden="true">
       <img class="hero__logo" src="asset/save_logo.png" alt="save">
     </div>
 
@@ -93,8 +98,7 @@
   </section>
 
   <!-- ── Features ─────────────────────────────────────────── -->
-  <!-- Four rows, screenshot and text alternating sides. Rows 1 and 3 carry a
-       second heading with no body copy — that is what the design shows.
+  <!-- Four rows, screenshot and text alternating sides.
        Each row's glow is the exported gradient behind it; it is the first
        child so it paints behind the content without needing a negative
        z-index (see the grain note in style.css for why that matters). -->
@@ -107,16 +111,18 @@
       <img class="feature__glow feature__glow--1" src="asset/grad_brownGreen.svg" alt="" aria-hidden="true">
 
       <div class="feature__shot">
-        <img src="asset/bring_back_life.png" alt="" width="1603" height="898">
+        <!-- Animated. Converted from the source GIF to animated WebP: same
+             960x540 / 63 frames / 12fps loop at a fraction of the bytes.
+             lazy because it is the heaviest asset on the page and sits well
+             below the fold. -->
+        <img src="asset/bring_back_life.webp" alt="" width="960" height="540"
+             loading="lazy" decoding="async">
         <img class="feature__prop feature__prop--seed" src="asset/motherSeed.png" alt="" aria-hidden="true">
       </div>
 
       <div class="feature__body">
-        <div class="feature__titles">
-          <h2 class="feature__title" data-i18n="f1Title"></h2>
-          <h2 class="feature__title feature__title--aside" data-i18n="f1Aside"></h2>
-        </div>
-        <p class="feature__text" data-i18n="f1Text"></p>
+        <h2 class="feature__title" data-i18n-html="f1Title"></h2>
+        <p class="feature__text" data-i18n-html="f1Text"></p>
       </div>
     </article>
 
@@ -125,15 +131,16 @@
       <img class="feature__glow feature__glow--2" src="asset/grad_purple.svg" alt="" aria-hidden="true">
 
       <div class="feature__shot">
-        <img src="asset/manage_resource.png" alt="" width="1603" height="901">
+        <!-- Animated, same treatment as row 1: source GIF re-encoded to
+             animated WebP. 960x540 / 99 frames / 12fps loop. -->
+        <img src="asset/manage_resource.webp" alt="" width="960" height="540"
+             loading="lazy" decoding="async">
         <img class="feature__prop feature__prop--nutrition" src="asset/nutrition.png" alt="" aria-hidden="true">
       </div>
 
       <div class="feature__body">
-        <div class="feature__titles">
-          <h2 class="feature__title" data-i18n="f2Title"></h2>
-        </div>
-        <p class="feature__text" data-i18n="f2Text"></p>
+        <h2 class="feature__title" data-i18n-html="f2Title"></h2>
+        <p class="feature__text" data-i18n-html="f2Text"></p>
       </div>
     </article>
 
@@ -142,16 +149,16 @@
       <img class="feature__glow feature__glow--3" src="asset/grad_brown.svg" alt="" aria-hidden="true">
 
       <div class="feature__shot">
-        <img src="asset/protect_mothertree.png" alt="" width="1603" height="900">
+        <!-- Animated, same treatment as the other rows: source GIF re-encoded
+             to animated WebP. 960x540 / 100 frames / 12fps loop. -->
+        <img src="asset/protect_mothertree.webp" alt="" width="960" height="540"
+             loading="lazy" decoding="async">
         <img class="feature__prop feature__prop--enemy" src="asset/enemy.png" alt="" aria-hidden="true">
       </div>
 
       <div class="feature__body">
-        <div class="feature__titles">
-          <h2 class="feature__title" data-i18n="f3Title"></h2>
-          <h2 class="feature__title feature__title--aside" data-i18n="f3Aside"></h2>
-        </div>
-        <p class="feature__text" data-i18n="f3Text"></p>
+        <h2 class="feature__title" data-i18n-html="f3Title"></h2>
+        <p class="feature__text" data-i18n-html="f3Text"></p>
       </div>
     </article>
 
@@ -160,14 +167,15 @@
       <img class="feature__glow feature__glow--4" src="asset/grad_brownGreen.svg" alt="" aria-hidden="true">
 
       <div class="feature__shot">
-        <img src="asset/build_your_base.png" alt="" width="1603" height="900">
+        <!-- Animated, same treatment as rows 1 and 2: source GIF re-encoded
+             to animated WebP. 960x540 / 111 frames / 12fps loop. -->
+        <img src="asset/build_your_base.webp" alt="" width="960" height="540"
+             loading="lazy" decoding="async">
       </div>
 
       <div class="feature__body">
-        <div class="feature__titles">
-          <h2 class="feature__title" data-i18n="f4Title"></h2>
-        </div>
-        <p class="feature__text" data-i18n="f4Text"></p>
+        <h2 class="feature__title" data-i18n-html="f4Title"></h2>
+        <p class="feature__text" data-i18n-html="f4Text"></p>
       </div>
     </article>
 
@@ -200,13 +208,13 @@
         </svg>
       </a>
 
-      <!-- TODO: real Steam store URL. Until then this link goes nowhere. -->
+      <!-- TODO: real Steam store URL. Until then this link goes nowhere.
       <a class="social" href="#"
          target="_blank" rel="noopener noreferrer" data-i18n-label="steam">
         <svg class="social__icon" viewBox="0 0 24 24" aria-hidden="true">
           <path d="M11.98 0C5.68 0 .51 4.86.02 11.04l6.43 2.66c.55-.37 1.2-.59 1.91-.59.07 0 .13 0 .19.01l2.86-4.15v-.06c0-2.49 2.03-4.52 4.53-4.52s4.52 2.03 4.52 4.53-2.03 4.52-4.52 4.52h-.11l-4.08 2.91v.16c0 1.88-1.51 3.4-3.39 3.4-1.64 0-3.02-1.17-3.33-2.73L.44 15.27C1.86 20.31 6.49 24 11.98 24c6.63 0 12-5.37 12-12s-5.37-12-12-12ZM7.54 18.21l-1.47-.61c.26.54.71 1 1.31 1.25 1.3.54 2.8-.08 3.34-1.37.26-.63.26-1.32 0-1.95a2.55 2.55 0 0 0-1.38-1.38 2.57 2.57 0 0 0-1.88-.03l1.52.63c.96.4 1.41 1.5 1.01 2.46-.4.95-1.5 1.4-2.46 1Zm11.42-9.3c0-1.67-1.36-3.02-3.02-3.02s-3.02 1.35-3.02 3.02 1.35 3.01 3.02 3.01 3.02-1.35 3.02-3.01Zm-5.28 0c0-1.26 1.02-2.27 2.27-2.27s2.26 1.01 2.26 2.27-1.01 2.26-2.26 2.26-2.27-1.01-2.27-2.26Z"/>
         </svg>
-      </a>
+      </a> -->
     </nav>
   </section>
 
