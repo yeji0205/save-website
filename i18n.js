@@ -25,6 +25,34 @@ export const STRINGS = {
     playVideo: "Play the trailer",
     discord: "Join the save Discord server",
     tiktok: "save on TikTok, @save.nature.game",
+    steam: "save on Steam",
+
+    /* ── Features ──
+       TODO: f1Text–f4Text are still the placeholder paragraph the Figma
+       file uses for every row. They are separate keys on purpose, so each
+       one can be replaced with its own copy without touching the others. */
+    f1Title: "Bring back life",
+    f1Aside: "Plant Mothertree",
+    f1Text:
+      "We are a couple that is working on this game and we really need your " +
+      "valuable feedback. We would love to inform you when our first playtest " +
+      "is ready.",
+    f2Title: "Manage resources",
+    f2Text:
+      "We are a couple that is working on this game and we really need your " +
+      "valuable feedback. We would love to inform you when our first playtest " +
+      "is ready.",
+    f3Title: "Protect it",
+    f3Aside: "Defeat enemies",
+    f3Text:
+      "We are a couple that is working on this game and we really need your " +
+      "valuable feedback. We would love to inform you when our first playtest " +
+      "is ready.",
+    f4Title: "Build your Base",
+    f4Text:
+      "We are a couple that is working on this game and we really need your " +
+      "valuable feedback. We would love to inform you when our first playtest " +
+      "is ready.",
   },
 
   de: {
@@ -44,6 +72,35 @@ export const STRINGS = {
     playVideo: "Trailer abspielen",
     discord: "Tritt dem save Discord-Server bei",
     tiktok: "save auf TikTok, @save.nature.game",
+    steam: "save auf Steam",
+
+    /* ── Features ──
+       TODO: same placeholder as the English side, and the headings below are
+       my translations of the English ones — the Figma file only has English
+       here, so please check the wording. "sie" for the Mother Tree follows
+       the tagline above, which already treats her as feminine. */
+    f1Title: "Bring das Leben zurück",
+    f1Aside: "Pflanze den Mutterbaum",
+    f1Text:
+      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
+      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
+      "benachrichtigen, sobald unser erster Playtest bereit ist.",
+    f2Title: "Verwalte Ressourcen",
+    f2Text:
+      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
+      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
+      "benachrichtigen, sobald unser erster Playtest bereit ist.",
+    f3Title: "Beschütze sie",
+    f3Aside: "Besiege Feinde",
+    f3Text:
+      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
+      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
+      "benachrichtigen, sobald unser erster Playtest bereit ist.",
+    f4Title: "Baue deine Basis",
+    f4Text:
+      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
+      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
+      "benachrichtigen, sobald unser erster Playtest bereit ist.",
   },
 };
 

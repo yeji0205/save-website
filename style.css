@@ -20,10 +20,19 @@
   --fs-follow:  clamp(0.85rem, 1.4vw, 1rem);     /* "support and…"     */
   --fs-lang:    clamp(0.8rem, 1.2vw, 0.9rem);    /* DE / EN            */
   --fs-imprint: clamp(0.75rem, 1.1vw, 0.85rem);  /* footer             */
+  --fs-feature-title: clamp(1.15rem, 2.1vw, 1.6rem); /* "Bring back life" */
+  --fs-feature-text:  clamp(0.8rem, 1.3vw, 0.95rem); /* feature paragraph */
 
   --logo-width: min(280px, 55vw);       /* hero wordmark */
-  --glow-width: min(620px, 92vw);       /* green halo, centred on the logo */
-  --about-glow-width: min(680px, 94vw); /* green halo behind the selfie     */
+  /* Green halo behind the wordmark (grad_green.svg). Measured off the
+     mockup, where the blob is 3.2x the width of the logo and sits low and
+     slightly left of it — it spreads down over the tagline rather than
+     ringing the logo. Tied to --logo-width so resizing the logo carries the
+     halo with it. The vw cap stops it swallowing a phone screen. */
+  --glow-width: min(calc(var(--logo-width) * 3.2), 130vw);
+  --glow-shift-x: calc(var(--logo-width) * -0.26);
+  --glow-shift-y: calc(var(--logo-width) * 0.62);
+
   --hero-gap: clamp(40px, 7vh, 84px);   /* space between logo and tagline */
 
   /* Hero tagline width. Two limits, whichever is smaller wins:
@@ -34,14 +43,29 @@
      For a fixed width instead, just put a value here, e.g. 640px. */
   --tagline-width: min(100%, calc(var(--logo-width) * 2.2));
 
-  /* Video width is a proportion of the window: 60vw = 60% of screen width,
-     matching the mockup. The clamp stops it getting silly on a tiny phone
-     or a very wide monitor. The props are positioned in % of THIS, so they
-     scale with it automatically. Overridden to 88vw on small screens. */
-  --video-width: clamp(300px, 60vw, 900px);
+  /* The strip of background left either side of the video. The video is
+     full-bleed MINUS this, so it keeps growing on a wide monitor instead of
+     stopping at a max-width and turning the rest into margin.
 
-  --avatar-size: 250px;                 /* the selfie */
-  --video-to-about-gap: clamp(110px, 24vh, 300px);  /* video → selfie */
+     Sized to track the mockup, where the video leaves 102 of 5227px each
+     side — 1.95%. 2vw matches that almost exactly at any normal window; the
+     12px floor keeps a phone from losing its margin, and the 36px ceiling
+     stops the gutter creeping wider on a very large display.
+     Raise the ceiling for a thicker band, lower it for a thinner one. */
+  --page-gutter: clamp(12px, 2vw, 36px);
+
+  /* The features rows and the text columns share this. Derived from the
+     mockup: content spans 4087 of 5227px, ~78% of the page. */
+  --content-width: min(1180px, 92vw);
+
+  /* Vertical space between the four feature rows. */
+  --feature-gap: clamp(56px, 9vh, 130px);
+
+  /* The selfie. The new design shrinks it a lot — 312px in a 5227px mockup
+     is ~6% of the page, i.e. roughly 86px at a 1440px window. */
+  --avatar-size: clamp(76px, 7vw, 100px);
+
+  --video-gap-below: clamp(110px, 24vh, 300px);  /* video → wordmark */
 
   --social-size: 64px;                  /* icons in the about section */
   --social-size-sm: 54px;               /* icons in the header        */
@@ -124,6 +148,7 @@ body::after {
 .header,
 .hero,
 .video,
+.features,
 .about,
 .footer {
   position: relative;
@@ -254,21 +279,28 @@ body::after {
   place-items: center;
 }
 
-/* The green halo, shared by the hero and the about section. Each one is
-   centred on its own section; only the width differs. */
-.hero__glow,
-.about__glow {
+/* The green halo behind the wordmark. This is now grad_green.svg, exported
+   from the design (node 2209:1342), rather than a CSS radial-gradient — the
+   exported file carries the real colours and the real blob shape.
+   aspect-ratio matches the SVG's own 4051 x 3655 box so it never distorts.
+
+   The social discs still use the --glow / --glow-fade tokens for their hover
+   halo; those are deliberately left alone. */
+.hero__glow {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  aspect-ratio: 1 / 0.8;
-  background: radial-gradient(ellipse at center, var(--glow) 0%, var(--glow-fade) 62%);
+  transform: translate(
+    calc(-50% + var(--glow-shift-x)),
+    calc(-50% + var(--glow-shift-y))
+  );
+  width: var(--glow-width);
+  max-width: none;              /* beat the global img { max-width: 100% } */
+  aspect-ratio: 4051 / 3655;
+  height: auto;
   pointer-events: none;
+  user-select: none;
 }
-
-.hero__glow  { width: var(--glow-width); }
-.about__glow { width: var(--about-glow-width); }
 
 .hero__logo {
   position: relative;   /* above the glow */
@@ -291,12 +323,18 @@ body::after {
 /* ── Video ──────────────────────────────────────────────── */
 /* The section is only as wide as the video, so the props can be positioned
    in percentages of it and still line up at every screen size. */
-/* The bottom padding is the gap down to the selfie. It needs to clear the
-   nutrition prop, which hangs below the video's bottom edge. */
+/* Full-bleed apart from --page-gutter either side. This is padding rather
+   than a width, on purpose: a `width: 100vw` would include the scrollbar and
+   push the page sideways, whereas a block section is already exactly the
+   body's width, scrollbar excluded.
+
+   .video__stage sits in this padding box, so the prop's percentages still
+   resolve against the video's real width — nothing else needs to change.
+
+   The bottom padding is the gap down to the wordmark. It needs to clear the
+   treeSeed prop, which hangs below the video's bottom edge. */
 .video {
-  width: var(--video-width);
-  margin: 0 auto;
-  padding-bottom: var(--video-to-about-gap);
+  padding: 0 var(--page-gutter) var(--video-gap-below);
 }
 
 /* Anchor box for the props, and the reason they stay glued to the video.
@@ -349,9 +387,11 @@ body::after {
   transform: translate(-50%, -50%) scale(1.06);
 }
 
-/* ═══ THE FLOATING PROPS ═══ treeSeed / motherSeed / nutrition.
-   Every number below is a PERCENTAGE OF THE VIDEO BOX, which is why they
-   keep their positions as the window resizes.
+/* ═══ THE FLOATING PROP ═══ treeSeed.
+   In the new design the video carries one cut-out, straddling its bottom
+   edge; motherSeed and nutrition moved down into the feature rows.
+   Every number below is a PERCENTAGE OF THE VIDEO BOX, which is why it
+   keeps its position as the window resizes.
 
    width   size, as a % of the video's width.
 
@@ -378,28 +418,116 @@ body::after {
   z-index: 3;            /* in front of the video by default */
 }
 
+/* In front of the video, straddling its bottom edge toward the right.
+   Measured off the mockup: 815.66 / 5017 wide, starting 75.8% across.
+   Raise the -43.5% to lift it further and cover more of the video;
+   lower it toward -20% to drop it back down. */
 .prop--tree {
-  width: 18%;
-  left: -20%;
-  top: -18%;
+  width: 16.3%;
+  left: 75.8%;
+  top: 100%;
+  transform: translateY(-43.5%);
 }
 
-/* Behind the video — only the part sticking out past the right edge shows. */
-.prop--mother {
-  width: 22.5%;
-  left: 95%;
-  top: 8%;
-  z-index: 1;
+/* ── Features ───────────────────────────────────────────── */
+/* Four rows, screenshot and text swapping sides. Everything inside a row is
+   sized in % of the row, so the whole band scales with --content-width. */
+.features {
+  display: flex;
+  flex-direction: column;
+  gap: var(--feature-gap);
+  width: var(--content-width);
+  margin: 0 auto;
+  padding: clamp(20px, 5vh, 60px) 0 clamp(40px, 8vh, 100px);
 }
 
-/* In front of the video, straddling its bottom-left edge.
-   Raise the -70% to lift it further and cover more of the video;
-   lower it toward -50% to drop it back down. */
-.prop--nutrition {
-  width: 28.5%;
-  left: 3%;
-  top: 118%;
-  transform: translateY(-70%);
+.feature {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 4vw, 70px);
+  text-align: left;
+}
+
+/* Screenshot on the right instead of the left. row-reverse flips the visual
+   order without touching the DOM order, so the markup stays identical and
+   reading order (screenshot, then its text) is preserved. */
+.feature--right { flex-direction: row-reverse; }
+
+/* ═══ THE ROW GLOWS ═══
+   The exported gradient blobs, one per row. They are the FIRST child of the
+   row and carry no z-index; .feature__shot and .feature__body are
+   position:relative, so normal paint order already puts them on top. That is
+   deliberate — a negative z-index here would drop the glow behind the page
+   background entirely (same trap as the grain, see above).
+
+   Each blob is far bigger than its row and hangs outside it, which is why
+   `overflow` must stay visible on .features and .feature. body already has
+   overflow-x:hidden, so nothing can cause sideways scroll.
+
+   The numbers are measured off the mockup, as a % of the row's own box. */
+.feature__glow {
+  position: absolute;
+  max-width: none;       /* beat the global img { max-width: 100% } */
+  height: auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+.feature__glow--1 { width: 59.1%; left: -2.7%; top: -18.8%; }
+.feature__glow--2 { width: 65.8%; left: 40.4%; top: -45.5%; }
+.feature__glow--3 { width: 49.6%; left: -4.1%; top: -48.1%; }
+.feature__glow--4 { width: 71.7%; left: 34.5%; top: -37.0%; }
+
+/* The screenshot. Its box is the anchor for the row's cut-out prop, so the
+   prop's percentages resolve against the screenshot and not the whole row.
+   overflow stays visible here — the props deliberately break the edges — so
+   the rounded corners go on the <img> itself. */
+.feature__shot {
+  position: relative;
+  flex: 0 1 50%;
+}
+
+.feature__shot > img { border-radius: var(--radius); }
+
+/* Same idea as the video props: every number is a % OF THE SCREENSHOT BOX.
+   left/top place the prop's top-left corner; negative values push it outside
+   the screenshot. See the video prop block above for the full explanation. */
+.feature__prop {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.feature__prop--seed      { width: 30.0%; left:  15.0%; top:  55.3%; }
+.feature__prop--nutrition { width: 38.4%; left:  80.3%; top: -34.2%; }
+.feature__prop--enemy     { width: 31.9%; left: -13.8%; top:  74.3%; }
+
+.feature__body {
+  position: relative;
+  flex: 1 1 0;
+}
+
+/* Rows 1 and 3 carry a second heading on the same line as the first. Rows 2
+   and 4 just hold the one, so this collapses to a plain block for them. */
+.feature__titles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: clamp(14px, 2.5vw, 44px);
+}
+
+.feature__title {
+  font-size: var(--fs-feature-title);
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.feature__text {
+  max-width: 34ch;
+  margin-top: clamp(12px, 2vh, 22px);
+  font-size: var(--fs-feature-text);
+  color: var(--text-soft);
 }
 
 /* ── About ──────────────────────────────────────────────── */
@@ -410,21 +538,12 @@ body::after {
   padding: 0 24px clamp(60px, 10vh, 110px);
 }
 
-/* Wrapper sized to the selfie, so the glow inside it is centred on the photo
-   — the same arrangement as .hero__mark and the logo. */
+/* Order is paragraph → selfie → follow line → socials, which is what the new
+   design shows. Each gap below is the space ABOVE that element. */
 .about__mark {
-  position: relative;
   display: grid;
   place-items: center;
-}
-
-/* position: relative lifts these above .about__glow. Without it the glow,
-   being absolutely positioned, would paint over them. */
-.about__avatar,
-.about__text,
-.about__follow,
-.about .socials {
-  position: relative;
+  margin-top: clamp(28px, 5vh, 56px);
 }
 
 .about__avatar {
@@ -437,7 +556,6 @@ body::after {
 
 .about__text {
   max-width: 46ch;
-  margin-top: clamp(20px, 3.5vh, 34px);
   font-size: var(--fs-about);
   color: var(--text-soft);
 }
@@ -448,7 +566,7 @@ body::after {
   color: var(--text-soft);
 }
 
-.about .socials { margin-top: clamp(18px, 3vh, 30px); }
+.about .socials { margin-top: clamp(14px, 2.5vh, 24px); }
 
 /* ── Footer ─────────────────────────────────────────────── */
 .footer {
@@ -514,27 +632,46 @@ body::after {
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
+/* Two columns stop working well before the phone breakpoint, so the feature
+   rows stack on their own, earlier. */
+@media (max-width: 860px) {
+  .feature,
+  .feature--right {
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(18px, 3vh, 34px);
+    text-align: center;
+  }
+
+  .feature__shot,
+  .feature__body { flex: 0 0 auto; width: 100%; }
+
+  .feature__titles { justify-content: center; }
+
+  .feature__text {
+    max-width: 46ch;
+    margin-inline: auto;
+  }
+
+  /* One glow treatment for every row once they are stacked — the measured
+     per-row offsets only make sense in the two-column layout. Two class
+     names, so this beats the .feature__glow--N rules without !important. */
+  .features .feature__glow {
+    width: 118%;
+    left: -9%;
+    top: -14%;
+  }
+
+  /* Pull the cut-outs back toward the screenshot so they do not run off the
+     screen edge on a narrow window. */
+  .feature__prop--nutrition { width: 30%; left: 74%; top: -20%; }
+  .feature__prop--enemy     { width: 26%; left: -6%; top: 74%;  }
+}
+
 @media (max-width: 700px) {
-  /* 80vw, not more: the props hang off the sides of the video, so they need
-     margin to show in. 80vw leaves 10vw either side — enough for motherSeed
-     to clear the right edge without pushing the page off-screen. */
-  :root { --video-width: 80vw; }
-
-  .prop--tree      { width: 22%; left: -13%; top: -15%; }
-
-  /* motherSeed sits BEHIND the video, so only the part past 100% is visible.
-     Here that is 112% - 100% = 12% of the video's width showing.
-     Ceiling: left + width must stay under ~112%. The video is 80vw with 10vw
-     margins, so 112% lands right at the screen edge — go past it and the page
-     becomes horizontally scrollable. Raise `left` to reveal more of the prop,
-     but drop `width` by the same amount to stay under the ceiling. */
-  .prop--mother    { width: 26%; left: 86%;  top: 6%;   }
-
-  /* nutrition is deliberately NOT overridden here. It sits inside the video's
-     own box rather than hanging off an edge, and its width/top are percentages
-     of the video, so the desktop values already scale correctly. An override
-     with a different top would only shift it out of place. */
-
+  /* The video prop sits inside the video's own box now rather than hanging
+     off an edge, and its width/top are percentages of the video, so the
+     desktop values already scale correctly — no override needed. */
   .header { justify-content: space-between; }
 }
 
