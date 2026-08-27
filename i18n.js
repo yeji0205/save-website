@@ -4,8 +4,10 @@
  * carries data-i18n="key" and its text gets replaced from the table below.
  * Use data-i18n-html="key" instead when the string contains markup (<b>, <br>).
  *
- * The German was drafted by Claude and should be reviewed by a native speaker
- * before launch, especially the tagline, which is deliberately poetic.
+ * The German is the authors' own translation, not a machine one — it is the
+ * source of truth for DE copy, so re-translate nothing here. Note it treats
+ * the Mother Tree as masculine ("ihn"/"er"), agreeing with "Mutterbaum",
+ * where the English uses "her".
  */
 
 export const STRINGS = {
@@ -47,17 +49,19 @@ export const STRINGS = {
 
   de: {
     tagline:
-      "Endlich landen wir auf der Erde: uralt, vergessen und doch atmet sie " +
-      "noch. Pflanze den Mutterbaum, sie ist unsere einzige Hoffnung.<br>" +
-      "Beschütze sie. Nähre sie. Lass sie heilen, was wir zerstört haben. " +
-      "Stell dich zwischen sie und die Dunkelheit. Können wir das Grün " +
-      "zurückbringen? <b>Kann die Erde uns vergeben?</b>",
+      "Endlich kehren wir zur Erde zurück, zerstört, vergessen, aber noch " +
+      "nicht verloren. Den Mutterbaum pflanzen ist unsere einzige " +
+      "Hoffnung.<br>" +
+      "Wir müssen ihn beschützen, uns um ihn kümmern und ihn heilen lassen, " +
+      "was wir zerstört haben. Wir stehen an seiner Seite und halten das " +
+      "Böse fern. Können wir die Natur zurückbringen? " +
+      "<b>Wird die Erde uns vergeben?</b>",
     about:
-      "Wir sind ein Paar, das an diesem Spiel arbeitet, und wir brauchen " +
-      "wirklich dein wertvolles Feedback. Wir möchten dich gerne " +
-      "benachrichtigen, sobald unser erster Playtest bereit ist — dort kannst " +
-      "du das Spiel gemeinsam mit uns gestalten.",
-    follow: "unterstütze und verfolge unsere Entwicklung hier",
+      "Wir sind ein Paar, das an “Save” arbeitet, und sind sehr dankbar für " +
+      "jedes Feedback. Sobald unser erster Playtest startet, würden wir dir " +
+      "gerne Bescheid geben und du kannst mit uns das Spiel immer besser " +
+      "machen.",
+    follow: "Folge uns!",
     imprint: "Impressum",
     fullscreen: "Trailer im Vollbild abspielen",
     discord: "Tritt dem save Discord-Server bei",
@@ -65,25 +69,21 @@ export const STRINGS = {
     youtube: "save auf YouTube, @savegamesworld",
     steam: "save auf Steam",
 
-    /* ── Features ──
-       TODO: my translations of the new English copy — please check the
-       wording. "sie" for the Mother Tree follows the tagline above, which
-       already treats her as feminine even though "Mutterbaum" is masculine;
-       switch both to "ihn"/"er" if you would rather it agree grammatically. */
-    f1Title: "Pflanze den Mutterbaum<br>und halte sie am Leben",
-    f1Text: "Alles beginnt mit einem Samen. Alles endet, wenn er stirbt.",
+    /* ── Features ── */
+    f1Title: "Pflanze den Mutterbaum<br>und halte ihn am Leben",
+    f1Text: "Alles startet mit einem Samen,<br>und alles endet, wenn er stirbt.",
 
-    f2Title: "Verwalte Ressourcen",
+    f2Title: "Bring die Natur ins Gleichgewicht",
     f2Text:
-      "Sammle. Heile das Land. Pflanze neue Bäume.<br> " +
-      "Nähre den Mutterbaum und die Erde unter ihr.",
+      "Sammle, heile Areale und pflanze neue Bäume,<br> " +
+      "die den Mutterbaum und die Erde mit Leben füllen.",
 
-    f3Title: "Kämpfe gegen das, was du zerstört hast",
+    f3Title: "Kämpfe gegen das Vergessen",
     f3Text:
-      "Die Erde erinnert sich. Ihre Kreaturen werden dich holen — und den Baum.",
+      "Aber die Erde vergisst nicht. Kreaturen werden sich gegen dich wehren.",
 
     f4Title: "Baue deine Basis",
-    f4Text: "Während der Mutterbaum wächst, schenkt sie dir Schutz.",
+    f4Text: "Wenn der Mutterbaum wächst, wird er zu deiner Unterkunft.",
   },
 };
 
