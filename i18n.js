@@ -25,6 +25,7 @@ export const STRINGS = {
     fullscreen: "Play the trailer fullscreen",
     discord: "Join the save Discord server",
     tiktok: "save on TikTok, @save.nature.game",
+    youtube: "save on YouTube, @savegamesworld",
     steam: "save on Steam",
 
     /* ── Features ── */
@@ -61,6 +62,7 @@ export const STRINGS = {
     fullscreen: "Trailer im Vollbild abspielen",
     discord: "Tritt dem save Discord-Server bei",
     tiktok: "save auf TikTok, @save.nature.game",
+    youtube: "save auf YouTube, @savegamesworld",
     steam: "save auf Steam",
 
     /* ── Features ──
