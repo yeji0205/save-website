@@ -632,6 +632,14 @@ body::after {
   color: var(--text-soft);
 }
 
+/* The playtest sentence, emphasised. 600 and not the browser default 700:
+   KoHo is only loaded at 300/400/500/600, so 700 would have no real face to
+   use and the browser would fake it by smearing the 600 glyphs. */
+.about__text b {
+  font-weight: 600;
+  color: var(--text);
+}
+
 .about__follow {
   margin-top: clamp(18px, 3vh, 30px);
   font-size: var(--fs-follow);

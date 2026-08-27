@@ -20,8 +20,8 @@ export const STRINGS = {
       "Can we bring the green back? <b>Can the Earth forgive us?</b>",
     about:
       "We are a couple that is working on this game and we really need your " +
-      "valuable feedback. We would love to inform you when our first playtest " +
-      "is ready where you can shape the game with us.",
+      "valuable feedback. <b>We would love to inform you when our first " +
+      "playtest is ready</b> where you can shape the game with us.",
     follow: "support and follow our development here",
     imprint: "Imprint",
     fullscreen: "Play the trailer fullscreen",
@@ -58,9 +58,9 @@ export const STRINGS = {
       "<b>Wird die Erde uns vergeben?</b>",
     about:
       "Wir sind ein Paar, das an “Save” arbeitet, und sind sehr dankbar für " +
-      "jedes Feedback. Sobald unser erster Playtest startet, würden wir dir " +
-      "gerne Bescheid geben und du kannst mit uns das Spiel immer besser " +
-      "machen.",
+      "jedes Feedback. <b>Sobald unser erster Playtest startet, würden wir " +
+      "dir gerne Bescheid geben</b> und du kannst mit uns das Spiel immer " +
+      "besser machen.",
     follow: "Folge uns!",
     imprint: "Impressum",
     fullscreen: "Trailer im Vollbild abspielen",
