@@ -21,7 +21,7 @@ export const GRAIN = {
   /* How many noise features fit across the tile. HIGHER = finer, smaller
      specks. 32 is chunky, 64 medium, 128 fine. Speck size in pixels is
      roughly tile / scale. */
-  scale: 64,
+  scale: 128,
 
   /* Octaves of detail. 1 = smooth blobs only, 4 = rich and grainy.
      Each octave doubles frequency and multiplies amplitude by persistence. */
